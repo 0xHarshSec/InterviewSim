@@ -22,8 +22,8 @@ from langchain.schema import (
     SystemMessage
 )
 
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ["SERPAPI_API_KEY"] = "bc3a9cd7e7baf8c696e502082591f67a0b6b4c6b02a7513606c2b6fd890900e6"
+os.environ["OPENAI_API_KEY"] = ""
+os.environ["SERPAPI_API_KEY"] = ""
 
 from langchain.agents import load_tools
 from langchain.agents import initialize_agent
