@@ -11,11 +11,11 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains.summarize import load_summarize_chain
 
 load_dotenv()
-openai_api_key = os.getenv("OPENAI_API_KEY")
-serp_api_key = os.getenv("SERPAPI_API_KEY")
+# openai_api_key = os.getenv("OPENAI_API_KEY")
+# serp_api_key = os.getenv("SERPAPI_API_KEY")
 
-openai.api_key = openai_api_key
-os.environ["SERPAPI_API_KEY"] = serp_api_key
+os.environ["OPENAI_API_KEY"] = "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"
+# os.environ["SERPAPI_API_KEY"] = serp_api_key
 
 from langchain.agents import load_tools
 from langchain.agents import initialize_agent

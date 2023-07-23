@@ -9,7 +9,7 @@ load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 serp_api_key = os.getenv("SERPAPI_API_KEY")
 
-openai.api_key = openai_api_key
+os.environ["OPENAI_API_KEY"]= openai_api_key
 os.environ["SERPAPI_API_KEY"] = serp_api_key
 
 
