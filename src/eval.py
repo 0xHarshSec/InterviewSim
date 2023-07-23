@@ -2,28 +2,20 @@ import os
 import streamlit as st
 from IPython.display import display, HTML
 display(HTML("<style>.container { width:90% !important; }</style>"))
-
+import openai
+from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 from langchain.chat_models import ChatOpenAI
 from langchain.chains.summarize import load_summarize_chain
 
-# Prompt templates for dynamic values
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate, 
-    HumanMessagePromptTemplate
-)
 
-from langchain.schema import (
-    AIMessage,
-    HumanMessage,
-    SystemMessage
-)
+load_dotenv()
+openai_api_key = os.getenv("OPENAI_API_KEY")
+serp_api_key = os.getenv("SERPAPI_API_KEY")
 
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ["SERPAPI_API_KEY"] = "bc3a9cd7e7baf8c696e502082591f67a0b6b4c6b02a7513606c2b6fd890900e6"
+openai.api_key = openai_api_key
+os.environ["SERPAPI_API_KEY"] = serp_api_key
 
 from langchain.agents import load_tools
 from langchain.agents import initialize_agent
@@ -38,9 +30,9 @@ from langchain.prompts.prompt import PromptTemplate
 # Chat specific components
 from langchain.memory import ConversationBufferMemory
 
-llm2 = OpenAI(temperature=0.2)
+eval_llm = OpenAI(temperature=0.2)
 
-template2 = """
+evaluation_template = """
 you are provided with a question asked by a Chatbot and its answer provied by a human your task is to evaluate the answer provided by the user based on the question asked and give a point between 1-5 and also give the reason for the evaluation
 
 Chatbot: {question}
@@ -52,27 +44,22 @@ Human: {answer}
 <% end %>
 """
 
-prompt2 = PromptTemplate(
+evaluation_prompt = PromptTemplate(
     input_variables=["question", "answer"], 
-    template=template2
+    template=evaluation_template
 )
-#memory2 = ConversationBufferMemory(memory_key="chat_history")
 
-llm_chain2 = LLMChain(
-    llm=llm2, 
-    prompt=prompt2, 
+evaluation_chain = LLMChain(
+    llm=eval_llm, 
+    prompt=evaluation_prompt, 
     verbose=True, 
 )
 
+# q = "What is DevOps?"
+# a = "DevOps is a set of practices that combines software development (Dev) and IT operations (Ops) to improve collaboration, communication, and automation in delivering software products."
 
-q = "What is DevOps?"
-a = "devops is a something"
 
-evaluation = llm_chain2.predict(question=q ,answer=a)
+# evaluation = evaluation_chain.predict(question=q ,answer=a)
 
-def main():
-    st.write(evaluation)
-        
-
-if __name__ == '__main__':
-    main()
+def evaluate_answer(question,answer):
+    return evaluation_chain.predict(question=question ,answer=answer)
