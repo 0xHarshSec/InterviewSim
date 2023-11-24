@@ -1,0 +1,263 @@
+.chat-container {
+  overflow-y: scroll;
+  padding-left: 220px;
+  width: 100%;
+}
+
+.chat-container-app {
+  height: 80vh;
+}
+
+.chat-container-history {
+  height: 95vh;
+}
+
+#chatbot-ready-message {
+  font-size: larger;
+}
+
+.chat-box {
+  padding: 0;
+  list-style: none;
+}
+
+.bot,
+.user,
+.question, .final {
+  display: block;
+  margin-bottom: 10px;
+  padding: 14px;
+  margin: 8px 14px;
+  max-width: 70%;
+  word-wrap: break-word;
+  clear: both
+}
+
+.bot {
+  color: #333;
+  background: #d7d9db;
+  border-radius: 0 16px 16px 16px;
+  float: left;
+}
+
+.final {
+  color: #050505;
+  background: #c0cedb;
+  border-radius: 0 16px 16px 16px;
+  float: left;
+}
+
+.question{
+  color: #ffffff;
+  background: #3a3c3e;
+  border-radius: 0 16px 16px 16px;
+  float: left;
+}
+
+.user {
+  color: #ffffff;
+  background: #007bff;
+  border-radius: 16px 16px 0 16px;
+  float: right;
+}
+
+.sidebar {
+  position: absolute;
+  width: 220px;
+  height: 100vh;
+}
+
+.sidebar h4 {
+  font-size: 5%;
+  font-weight: bold;
+  margin-bottom: 5%;
+}
+
+.sidebar ul {
+  margin-top: 10%;
+}
+
+.sidebar li {
+  margin-bottom: 5%;
+}
+
+.sidebar a {
+  color: #333;
+  font-size: 100%;
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  color: #007bff;
+}
+
+.chatbot-container {
+  position: relative;
+}
+
+.user-input {
+  position: fixed;
+  bottom: 0;
+  left: 280px;
+  right: 0;
+  padding: 0 20px 20px;
+}
+
+#userInput.locked{
+  height: 10%;
+  border-radius: .5rem; 
+  padding: 10px; 
+  border-color: grey;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+.bi {
+  vertical-align: -.125em;
+  pointer-events: none;
+  fill: currentColor;
+}
+
+#jobSearch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#jobSearch > * {
+  margin-bottom: 10px;
+}
+
+.job-control{
+  width: 100%;
+  height: 40px;
+  background-color: #dbdbdb;
+  border-radius: .5rem;
+  outline: none;
+  border: none;
+}
+.job-control:focus{
+  background-color: #dbdbdb;
+  box-shadow: none;
+}
+
+#jobTitleSubmit {
+  padding: 6px 12px;
+}
+
+.form-control{
+  height: 10%;
+  border-radius: .5rem; /* Add rounded corners */
+  padding: 10px; /* Add some padding */
+  border-color: grey;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
+.form-control:focus{
+  background-color: #dbdbdb;
+  box-shadow: none;
+}
+
+.form-control:disabled{
+  height: 10%;
+  border-radius: .5rem; 
+  padding: 10px; 
+  border-color: grey;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+
+.input-group-chatbox{
+  display: flex; /* Use flexbox */
+  align-items: center; /* Center the button vertically */
+  width: 50%;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: .5rem;
+  background-color: #dbdbdb;
+}
+.input-group-chatbox button {
+  width: 50px;
+}
+
+#sendBtn{
+  font-size: 1.25rem;
+  color: black;
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+@media (max-width: 576px){
+  .sidebar {
+    width: 90%;
+    display: none;
+  }
+  .chat-container-app, .chat-container-history {
+    position: absolute;
+    top: 5%;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    padding-left: 0;
+  }
+  .user-input,
+  .input-group-chatbox {
+    position: fixed;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    bottom: 5px;
+  }
+
+  .user-input {
+    bottom: 0;
+  }
+  .input-group-chatbox button {
+    width: 30%;
+  }
+  .openbtn{
+    display: block;
+    color: white;
+    margin-top: 2%;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  .top-row{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5%;
+    background-color: #212529;
+  }
+  .center-text {
+    margin-left: 10px;
+  }
+  .closebtn{
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    margin-top: 2%;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 576px){
+  .top-row, .closebtn, .openbtn{
+    display: none;
+  }
+}

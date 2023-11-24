@@ -1,1 +1,2 @@
-src/.env
+__pycache__/
+env

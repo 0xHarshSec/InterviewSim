@@ -1,0 +1,68 @@
+/* Below is the common CSS for consistent styling over different pages */
+
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #ededed;
+}
+
+/* Add this to the child element's class when you want to center vertically */
+.vertical-center {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+/* 
+Add this to the parent div's class if you want to horizontally center
+the vertically stacked children 
+*/
+.column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Further customises the bootstrap button classes to better fit our theme*/
+.btn-primary {
+  background-color: #3164f4;
+  color: #ededed;
+}
+
+.btn-light {
+  background-color: #ededed;
+  color: black;
+  border: solid black 1px;
+}
+
+.underline-orange{
+  text-decoration: underline 0.15em #F4C131;
+  transition: text-decoration-color 300ms;
+}
+
+.underline-orange:hover{
+  text-decoration: underline 0.15em #3164f4;
+}
+
+.highlight-orange {
+  border-radius: 20px;
+  color: #3164f4;
+  font-family: 'Lobster', cursive;
+  background-color: #F4C131;
+}
+
+.cursive-blue {
+  font-family: 'Lobster', cursive;
+  color: #3164f4;
+}
+
+/* For trouble shooting purposes */
+/*
+div {
+  border: solid gray 1px;
+}
+*/
