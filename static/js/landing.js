@@ -1,36 +1,18 @@
 // List of job titles to iterate through
 const jobTitles = [
-    "Software Engineer", "Data Scientist", "UX Designer",
-    "Product Manager", "Data Analyst", "Data Engineer",
-    "Marketing Manager", "Office Assitant", "Lawyer",
-    "Accountant", "Sales Manager", "Graphic Designer", "Teacher"
+    "Devops Engineer", "Data Scientist", "Cyber Security Engineer"
 ]; // Add more job titles here
 
 // List of testimonials for the testimonials carousel
 const testimonials = [
     {
-        name: "Lloyd",
-        job: "Software Engineer @ Google",
-        testimonial: "Thanks to GetHired.ai I was able to prepare for my interview properly and get the job I wanted.",
-        rating: "&starf;&starf;&starf;&starf;&starf;"
+        testimonial: "Simulate a variety of job interview scenarios, including common questions and industry-specific scenarios."
     },
     {
-        name: "Uways",
-        job: "Software Developer @ Bitcoin",
-        testimonial: "If it wasn't for GetHired.ai I don't think I would've been able to work for Amazon!",
-        rating: "&starf;&starf;&starf;&starf;&star;"
+        testimonial: "Provide diverse interview settings (e.g., one-on-one, panel interviews) to prepare users for different situations."
     },
     {
-        name: "Jason",
-        job: "CEO @ Bitcoin",
-        testimonial: "I was able to get a job at my dream company thanks to GetHired.ai!",
-        rating: "&starf;&starf;&starf;&starf;&starf;"
-    },
-    {
-        name: "Jericho",
-        job: "Cyber Security Expert @ CyberX",
-        testimonial: "I was well prepared and wasn't nervous at all during my interview thanks to GetHired.ai!",
-        rating: "&starf;&starf;&starf;&starf;&starf;"
+        testimonial: "Generate detailed feedback reports for each simulated interview session."
     }
 ];
 
