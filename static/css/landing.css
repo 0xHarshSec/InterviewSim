@@ -1,0 +1,266 @@
+/* Below is for the modals on the landing page */
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+}
+
+#overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Below is for the default landing page */
+#top {
+  margin: 1em auto 6em auto;
+}
+
+#top, #main, #footer {
+  width: 90%;
+}
+
+#main > div {
+  margin-bottom: 5em; /* Seperates each div within main body */
+}
+
+.content {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.p-content {
+  width: 70%;
+  text-align: left;
+}
+
+.h1-content {
+  font-size: 2em;
+  font-weight: bolder;
+}
+
+.logo {
+  font-size: 1.3em;
+  font-weight: bolder;
+}
+
+#login-buttons, #logout-buttons {
+  float: right;
+}
+
+#introduction {
+  text-align: center;
+}
+
+#intro-header div {
+  background-color: #F4C131;
+  border-radius: 20px;
+  margin: auto;
+  width: 80%;
+}
+
+#job-title {
+  color: #3164f4;
+  font-size: larger;
+  font-family: 'Lobster', cursive;
+  transition: 1s ease-in;
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.fade-in.show {
+  opacity: 1;
+}
+
+#intro-header h1 {
+  font-size: 2.5em;
+  font-weight: bolder;
+}
+
+#intro-button button {
+  margin: 0.5em;
+}
+
+#about-header, #purpose-header {
+  font-family: 'Lobster', cursive;
+  color: #3164f4;
+  width: 18em;
+  background-color: #F4C131;
+  border-radius: 20px;
+}
+
+.infinite-carousel-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.infinite-carousel-container p {
+  font-family: 'Lobster', cursive;
+}
+
+.infinite-carousel-items {
+  display: flex;
+}
+
+.infinite-carousel-item {
+  flex: 0 0 10%;
+  margin: 1em 2em 1em 0;
+}
+
+.infinite-carousel-item > img, #interview-image {
+  width: 70%;
+}
+
+#interview-image {
+  max-width: 500px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chat-bubble {
+  display: none;
+  width: 10%;
+  opacity: 40%;
+  max-width: 100px;
+}
+
+#chat-bubble-1 {
+  margin-bottom: 18em;
+}
+
+#chat-bubble-2{
+  margin-bottom: 14em;
+}
+
+#testimonial-description {
+  margin: auto;
+}
+
+#testimonial-content {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);  
+  height: 20em;
+}
+
+#testimonial-text {
+  height: 5em;
+}
+
+#testimonial-content * {
+  text-align: center;
+  display: block;
+  margin: 0;
+}
+
+#testimonial-rating {
+  font-size: 3em;
+  color: #3164f4;
+}
+
+#testimonial-arrows button {
+  font-size: 1.5em;
+  font-weight: bolder;
+  background-color: #3164f4;
+  color: #ededed;
+  height: 2em;
+  width: 2em;
+  border-radius: 50%;
+  margin: .8em;
+  border: 1px #ededed;;
+}
+
+#footer {
+  margin: 10em auto 1em auto;
+}
+
+#footer a {
+  text-decoration: none;
+  color: black;
+}
+
+.footer-legal {
+  font-size: small;
+  margin: 0;
+}
+
+.footer-content {
+  text-align: center;
+  font-size: small;
+  margin: 0;
+}
+
+#video-modal {
+  width: 70%;
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio (9 / 16 * 100) */
+  width: 100%;
+  overflow: hidden;
+}
+
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* CSS for when screen width drops below 576px */
+@media (max-width: 576px) {
+  #top, #main, #footer {
+    width: 100%;
+  }
+
+  #top {
+    margin-bottom: 4em;
+  }
+
+  #current-username {
+    font-size: small;
+  }
+
+  .p-content {
+    width: 90%;
+    text-align: left;
+  }
+
+  .content, #footer * {
+    text-align: center;
+  }
+
+  .popup, #video-modal, .video-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .infinite-carousel-item {
+    margin-right: 1em; /* Adjust margin to display more logos when screen is small */
+  }
+
+  .infinite-carousel-item > img {
+    width: 100%;
+  }
+
+  #chat-bubble-1 {
+    margin-bottom: 8em;
+  }
+
+  #chat-bubble-2{
+    margin-bottom: 5em;
+  }
+
+}
