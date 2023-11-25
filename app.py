@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import sqlite3
 import secrets
+import pandas as pd
 
 # ============= IMPORTS FOR USER AUTH ============= #
 from flask_bcrypt import Bcrypt
@@ -19,8 +20,12 @@ from wtforms.validators import EqualTo, InputRequired, Length
 app = Flask(__name__)
 load_dotenv()  # take environment variables from .env.
 
-# Set OpenAI API key
-openai.api_key = os.getenv('OPENAI_API_KEY')
+import google.generativeai as palm
+
+palm.configure(api_key='AIzaSyCp37hYiT7Sjb2SbnCrwSl1D_ppKsrtb-c')
+
+models = [m for m in palm.list_models() if 'generateText' in m.supported_generation_methods]
+model = models[0].name
 
 # Main route, renders the landing page
 @app.route('/')
@@ -36,67 +41,53 @@ def app_main():
 
 # Function to check if a job title is real
 def is_real_job_title(job_title):
-    prompt = f"Is '{job_title}' a real job title?"
+    prompt = f"Is '{job_title}' a real job title? Answer yes or no"
 
     # Call OpenAI API to generate a response
-    response = openai.Completion.create(
-        engine="text-davinci-003",
+    response = palm.generateText(
+        model=model,
         prompt=prompt,
-        max_tokens=10,
-        n=1,
-        stop=None,
-        temperature=0.7,
+        temperature=0.5,
+        max_output_tokens=800,
     )
 
     # Process the response and return True if the answer contains 'yes'
-    answer = response.choices[0].text.strip().lower()
+    answer = response.result.strip().lower()
     return 'yes' in answer
 
 # Function to get the final decision based on responses and the job title
-def get_final_decision(responses, job_title):
-    # Create the prompt for the OpenAI API
-    prompt = f"Based on the following responses to the questions for the job title '{job_title}', provide a rating (1 to 10) and determine if the candidate is likely to be accepted for the job:\n"
-
-    # Add each question and response to the prompt
-    for response in responses:
-        prompt += f"Question: {response['question']}\nResponse: {response['response']}\n\n"
-
-    # Call the OpenAI API with the prompt
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=50,
-        n=1,
-        stop=None,
-        temperature=0.7,
+def get_final_decision(convo, job_title):
+    prompt2 = f"""
+        You are an interviewer at a big company. 
+        A candidate applying for the position of {job_title} has given an interview.
+        Analyze the following converstuion of their interview and decide whether the candidate deserves the position or not.
+        conversation : {convo}
+        Answer in one word only - approved or rejected.
+        """
+    res = palm.generate_text(
+        model=model,
+        prompt=prompt2,
+        temperature=0.5,
+        max_output_tokens=100,
     )
-
-    # Extract the decision from the API response
-    decision = response.choices[0].text.strip()
-    return decision
+    return "approved" in res.result
 
 # Function to generate interview questions for a job title
 def generate_interview_questions(job_title):
-    prompt = f"Pretend that you are an interviewer at a famous and high end company. Generate 5 interview questions that you would ask in an interview for the job title: {job_title}"
+    if job_title == "Data Scienist":
+        df = pd.read_csv("data_science.csv")
+    elif job_title == "DevOps Engineer":
+        df = pd.read_csv("dev_ops.csv")
+    elif job_title == "Cyber Security Engineer":
+        df = pd.read_csv("cyber_data.csv")
 
-    # Call the OpenAI API to generate questions
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=100,
-        n=1,
-        stop=None,
-        temperature=0.7,
-    )
-    # Process the response and return the list of questions
-    questions = response.choices[0].text.strip().split("\n")
-    
-    # Remove question numbers
-    questions_lst = []
-    for i in questions:
-        questions_lst.append(i[3:])
-
-    return questions_lst
+    for n in range(0, 5):
+        i = random.randint(0,len(df)-1)
+        que = df.iloc[i,0]
+        ans = df.iloc[i,1]
+        questions_lst.append(que)
+        answers_lst.append(ans)
+    return questions_lst, answers_lst
 
 # Function to check if a user response is genuine
 def is_genuine_response(user_response, question):
@@ -119,30 +110,23 @@ def is_genuine_response(user_response, question):
     return 'genuine' in answer
 
 # Function to get feedback on a user's response
-def get_feedback(user_response, question, job_title, check_genuine_responses=True):
-    if check_genuine_responses:
-        genuine = is_genuine_response(user_response, question)
-
-        if not genuine:
-            return "Please provide a valid response"
-
-    # Create a prompt for the OpenAI API
-    prompt = f'Prompt: Given the job title "{job_title}", please analyze the following interview response to the question "{question}". Response: {user_response}. Provide a detailed evaluation of the response making sure the evulation is 100 word or less.'
-
-    # Call the OpenAI API to get feedback
-    response = openai.Completion.create(
-        engine="text-davinci-003",
+def get_evaluation(user_response, question, job_title, answer):
+    prompt = f"""
+    You are an interviewer at a big company. 
+    A candidate applying for the position of {job_title} has been asked the question {question}.
+    The correct answer to the question is {answer}.
+    The candidate has answered to the given question with {user_response}.
+    Explain how the candidate has performed in short and kind way.
+    Also rate the answer out of 10.
+    """
+    evaluation = palm.generate_text(
+        model=model,
         prompt=prompt,
-        max_tokens=200,
-        n=1,
-        stop=None,
-        temperature=0.7,
+        temperature=0.5,
+        max_output_tokens=800,
     )
-
-    # Process the response and return the feedback
-    feedback = response.choices[0].text.strip()
-
-    return feedback
+    eval = evaluation.result
+    return eval
 
 # Route to check if a job title is real
 @app.route('/is_real_job_title', methods=['POST'])
@@ -155,6 +139,8 @@ def is_real_job_title_route():
 
     return jsonify({'is_real': is_real})
 
+convo = ""
+
 # Route to generate interview questions
 @app.route('/generate_questions', methods=['POST'])
 def generate_questions():
@@ -163,30 +149,30 @@ def generate_questions():
         return jsonify({'error': 'Job title is required'}), 400
 
     # Generate interview questions using the OpenAI API
-    questions = generate_interview_questions(job_title)
-
-    return jsonify({'questions': questions})
-
+    questions, answers = generate_interview_questions(job_title)
+    
+    for x in range(0,5):
+        yield jsonify({'question': questions[x]})
+        user_response = request.form.get('user_response')
+        eval = get_evaluation(user_response, questions[x], job_title, answers[x])
+        convo = "Question: " + questions[x] + "\nCorrect Answer: " + answers[x] + "\nCandidate Answer: " + user_response + "\nEvaluation: " + eval + "\n\n"
+    # Return a response after all questions are asked
+    return jsonify({'message': 'All questions asked.'})
+##############################################################################################################
 # Route to evaluate a user's response
-@app.route('/evaluate_response', methods=['POST'])
-def evaluate_response_route():
-    check_genuine_responses = request.form.get(
-        'check_genuine_responses', 'True') == 'True'
+# @app.route('/evaluate_response', methods=['POST'])
+# def evaluate_response_route():
+#     job_title = request.form.get('job_title')
+#     if not job_title:
+#         return jsonify({'error': 'Job title is required'}), 400
 
-    user_response = request.form.get('user_response')
-    question = request.form.get('question')
-    job_title = request.form.get('job_title')
-    if not user_response or not question or not job_title:
-        return jsonify({'error': 'User response, question, and job title are required'}), 400
+#     # Evaluate the user's response using the OpenAI API
+#     feedback = get_evaluation(user_response, question, job_title, check_genuine_responses)
 
-    # Evaluate the user's response using the OpenAI API
-    feedback = get_feedback(user_response, question,
-                            job_title, check_genuine_responses)
-
-    return jsonify(feedback)
-
+#     return jsonify(feedback)
+##############################################################################################################
 # Add the session history of current user to the database
-def add_session_to_database(userID, job_title, responses, decision, this_session):
+def add_session_to_database(userID, job_title, convo, decision, this_session):
     # Create a new session history instance
     session_history = SessionHistory(userID=userID, jobTitle=job_title, finalDecision=decision)
     this_session.add(session_history)
@@ -198,7 +184,7 @@ def add_session_to_database(userID, job_title, responses, decision, this_session
     # Insert the chat history into the database
     chat_history = []
     for response in responses:
-        chat = ChatHistory(sessionID=sessionID, botQuestion=response['question'], userResponse=response['response'], botReview=response['feedback'])
+        chat = ChatHistory(sessionID=sessionID, botQuestion=response['question'], userResponse=response['convo'], botReview=response['feedback'])
         chat_history.append(chat)
 
     this_session.add_all(chat_history)
@@ -208,22 +194,17 @@ def add_session_to_database(userID, job_title, responses, decision, this_session
 @app.route('/final_decision', methods=['POST'])
 def final_decision_route():
     job_title = request.form.get('job_title')
-    response_data = request.form.get('responses')
-
-    if not job_title or not response_data:
+    if not job_title or convo == "":
         return jsonify({'error': 'Job title and responses are required'}), 400
 
-    # Parse the responses JSON string
-    responses = json.loads(response_data)
-
     # Get the final decision based on the responses and job title
-    decision = get_final_decision(responses, job_title)
+    decision = get_final_decision(convo, job_title)
 
     # Below is the code to save the current session to the database
     if current_user.is_authenticated:
         # Only save chat logs if the user is logged in
         userID = current_user.id # Get the userID of the current user
-        add_session_to_database(userID, job_title, responses, decision, db_session)
+        add_session_to_database(userID, job_title, convo, decision, db_session)
     
     return jsonify(decision)
 
